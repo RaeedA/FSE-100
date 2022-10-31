@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -32,6 +34,8 @@ public class GamePanel extends GridPane {
     public final int PLAY = 1;
     public final int PAUSE = 2;
     private int state;
+    private Label scoreLabel;
+    private int score;
 
     public GamePanel() {
         super();
@@ -108,8 +112,14 @@ public class GamePanel extends GridPane {
                 foundPos = map[foodx][foody].getFill() != BODY;
             }
         }
+        score = length - 1;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                scoreLabel.setText("" + score);
+            }
+        });
         render();
-
     }
 
     private void move() {
@@ -164,5 +174,9 @@ public class GamePanel extends GridPane {
 
     public void resume() {
         start();
+    }
+
+    public void setScore(Label l) {
+        scoreLabel = l;
     }
 }

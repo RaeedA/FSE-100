@@ -1,14 +1,16 @@
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 public class App extends Application {
-    public static final int WINSIZE_X = 630, WINSIZE_Y = 680;
+    public static final int WINSIZE_X = 630, WINSIZE_Y = 730;
     private final String WINTITLE = "Snake";
     public GamePanel gp;
     public Button startButton;
@@ -24,10 +26,16 @@ public class App extends Application {
         startButton = new Button("START");
         startButton.setFocusTraversable(false);
         startButton.setOnAction(new StartButtonHandler());
-        startButton.setPrefHeight(50);
-        startButton.setPrefWidth(WINSIZE_X);
+        startButton.setPrefSize(WINSIZE_X, 50);
         topBox = new HBox();
-
+        topBox.setPrefSize(WINSIZE_X, 50);
+        Label scoreText = new Label("Score: ");
+        Label score = new Label("0");
+        topBox.setFocusTraversable(false);
+        gp.setScore(score);
+        topBox.getChildren().addAll(scoreText, score);
+        topBox.setAlignment(Pos.CENTER);
+        rootPane.setTop(topBox);
         rootPane.setBottom(startButton);
         rootPane.setCenter(gp);
         rootPane.setPrefSize(WINSIZE_X, WINSIZE_Y);
@@ -53,9 +61,9 @@ public class App extends Application {
             toggleButton = new Button("PAUSE");
             toggleButton.setFocusTraversable(false);
             toggleButton.setOnAction(new PauseButtonHandler());
-            toggleButton.setPrefHeight(50);
-            toggleButton.setPrefWidth(WINSIZE_X);
+            toggleButton.setPrefSize(WINSIZE_X, 50);
             rootPane.setBottom(toggleButton);
+            System.out.println(Thread.currentThread());
         }
     }
 
