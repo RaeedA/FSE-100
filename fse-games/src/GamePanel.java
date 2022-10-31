@@ -1,95 +1,120 @@
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-public class GamePanel extends JPanel {
-    private JLabel[][] map;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+
+public class GamePanel extends GridPane {
+    private Rectangle[][] map;
     private ArrayList<SnakeNode> snakeSections = new ArrayList<SnakeNode>();
     private final int speed = 100;
     private int length;
-    private int area;
     private int foodx;
     private int foody;
     private Head head;
-    private final Color BODY = Color.green;
-    private final Color FOOD = Color.RED;
-    private final Color GROUND = Color.BLACK;
+    private final Paint BODY = Color.GREEN;
+    private final Paint FOOD = Color.RED;
+    private final Paint GROUND = Color.BLACK;
     private final int UP = 2;
     private final int RIGHT = 3;
     private final int DOWN = 4;
     private final int LEFT = 5;
-    private KeyAdapter keyLog;
+    private EventHandler<KeyEvent> keyLog;
     private int inputDirection;
-    private int direction;
+    private int currentDirection;
+    private int nextDirection;
+    public final int STOP = 0;
+    public final int PLAY = 1;
+    public final int PAUSE = 2;
+    private int state;
 
     public GamePanel() {
         super();
         int height = 21;
         int len = 21;
         this.length = 1;
-        this.area = height * len;
-        this.map = new JLabel[height][len];
-        this.direction = RIGHT;
+        this.map = new Rectangle[height][len];
+        this.currentDirection = RIGHT;
+        this.nextDirection = RIGHT;
         this.inputDirection = RIGHT;
         for (int h = 0; h < height; h++) {
             for (int l = 0; l < len; l++) {
-                JLabel temp = new JLabel();
-                temp.setOpaque(true);
-                this.add(temp);
-                this.map[h][l] = temp;
+                Rectangle temp = new Rectangle(30, 30, GROUND);
+                setConstraints(temp, l, h);
+                getChildren().addAll(temp);
+                map[h][l] = temp;
             }
         }
-        Tail body = new Tail(10, 7);
+        Tail body = new Tail(10, 8);
         this.head = new Head(10, 8, body);
         snakeSections.add(head);
         snakeSections.add(body);
         this.foodx = 10;
         this.foody = 12;
-        this.setLayout(new GridLayout(height, len));
+        state = STOP;
 
-        keyLog = new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-                if (keyCode == KeyEvent.VK_UP) {
-                    inputDirection = UP;
-                } else if (keyCode == KeyEvent.VK_DOWN) {
-                    inputDirection = DOWN;
-                } else if (keyCode == KeyEvent.VK_LEFT) {
-                    inputDirection = LEFT;
-                } else if (keyCode == KeyEvent.VK_RIGHT) {
-                    inputDirection = RIGHT;
+        keyLog = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:
+                        inputDirection = UP;
+                        break;
+                    case DOWN:
+                        inputDirection = DOWN;
+                        break;
+                    case LEFT:
+                        inputDirection = LEFT;
+                        break;
+                    case RIGHT:
+                        inputDirection = RIGHT;
+                        break;
+                    case SHIFT:
+                        update();
+                        break;
+                    default:
+                        break;
                 }
-
-                if ((direction % 2 != inputDirection % 2)) {
-                    direction = inputDirection;
+                if ((currentDirection % 2 != inputDirection % 2)) {
+                    nextDirection = inputDirection;
                 }
             }
         };
+
+        setOnKeyPressed(keyLog);
 
         render();
     }
 
     private void update() {
         move();
+
         if (head.x == foodx && head.y == foody) {
-            SnakeNode temp = snakeSections.get(snakeSections.size() - 1);
+            Tail temp = (Tail) snakeSections.get(length);
             Tail t = new Tail(temp.x, temp.y);
             temp.add(t);
             snakeSections.add(t);
             length++;
-            foodx = ThreadLocalRandom.current().nextInt(0, 21);
-            foody = ThreadLocalRandom.current().nextInt(0, 21);
+            this.map[temp.prevx][temp.prevy].setFill(GROUND);
+            boolean foundPos = false;
+            while (!foundPos) {
+                foodx = ThreadLocalRandom.current().nextInt(0, 21);
+                foody = ThreadLocalRandom.current().nextInt(0, 21);
+                foundPos = map[foodx][foody].getFill() != BODY;
+            }
         }
         render();
+
     }
 
     private void move() {
-        switch (direction) {
+        currentDirection = nextDirection;
+        switch (currentDirection) {
             case UP:
                 head.move(head.x - 1, head.y);
                 break;
@@ -106,36 +131,25 @@ public class GamePanel extends JPanel {
     }
 
     private void render() {
-        for (int h = 0; h < 21; h++) {
-            for (int l = 0; l < 21; l++) {
-                this.map[h][l].setBackground(GROUND);
-            }
-        }
-
-        this.map[foodx][foody].setBackground(FOOD);
-        for (SnakeNode node : snakeSections) {
-            try {
-                this.map[node.x][node.y].setBackground(BODY);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("You Lose!");
-                System.exit(0);
-            }
+        this.map[foodx][foody].setFill(FOOD);
+        try {
+            Tail temp = (Tail) snakeSections.get(snakeSections.size() - 1);
+            this.map[temp.prevx][temp.prevy].setFill(GROUND);
+            this.map[head.x][head.y].setFill(BODY);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You Lose!");
+            System.exit(0);
         }
     }
 
-    public KeyAdapter getKeyLogger() {
+    public EventHandler<KeyEvent> getKeyLogger() {
         return keyLog;
     }
 
     public void start() {
         try {
-            System.out.println("3");
-            TimeUnit.SECONDS.sleep(1);
-            System.out.println("2");
-            TimeUnit.SECONDS.sleep(1);
-            System.out.println("1");
-            TimeUnit.SECONDS.sleep(1);
-            for (int i = 0; i < 500; i++) {
+            state = PLAY;
+            while (state == PLAY) {
                 TimeUnit.MILLISECONDS.sleep(speed);
                 update();
             }
@@ -144,4 +158,11 @@ public class GamePanel extends JPanel {
         }
     }
 
+    public void pause() {
+        state = PAUSE;
+    }
+
+    public void resume() {
+        start();
+    }
 }
