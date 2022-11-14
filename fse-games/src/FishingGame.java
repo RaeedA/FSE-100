@@ -97,7 +97,6 @@ public class FishingGame extends GridPane {
 
     private void update() {
         generateFish();
-        // TODO: score calculations
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
