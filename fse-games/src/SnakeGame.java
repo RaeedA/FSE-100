@@ -49,6 +49,7 @@ public class SnakeGame extends GridPane {
         for (int h = 0; h < height; h++) {
             for (int l = 0; l < len; l++) {
                 Rectangle temp = new Rectangle(30, 30, GROUND);
+                temp.setStroke(GROUND);
                 setConstraints(temp, l, h);
                 getChildren().addAll(temp);
                 map[h][l] = temp;
@@ -105,6 +106,7 @@ public class SnakeGame extends GridPane {
             snakeSections.add(t);
             length++;
             this.map[temp.prevx][temp.prevy].setFill(GROUND);
+            this.map[temp.prevx][temp.prevy].setStroke(GROUND);
             boolean foundPos = false;
             while (!foundPos) {
                 foodx = ThreadLocalRandom.current().nextInt(0, 21);
@@ -142,10 +144,13 @@ public class SnakeGame extends GridPane {
 
     private void render() {
         this.map[foodx][foody].setFill(FOOD);
+        this.map[foodx][foody].setStroke(GROUND);
         try {
             Tail temp = (Tail) snakeSections.get(snakeSections.size() - 1);
             this.map[temp.prevx][temp.prevy].setFill(GROUND);
+            this.map[temp.prevx][temp.prevy].setStroke(GROUND);
             this.map[head.x][head.y].setFill(BODY);
+            this.map[head.x][head.y].setStroke(GROUND);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("You Lose!");
             System.exit(0);
