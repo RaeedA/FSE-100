@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
-public class GamePanel extends GridPane {
+public class SnakeGame extends GridPane {
     private Rectangle[][] map;
     private ArrayList<SnakeNode> snakeSections = new ArrayList<SnakeNode>();
     private final int speed = 100;
@@ -37,7 +37,7 @@ public class GamePanel extends GridPane {
     private Label scoreLabel;
     private int score;
 
-    public GamePanel() {
+    public SnakeGame() {
         super();
         int height = 21;
         int len = 21;

@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 public class App extends Application {
     public static final int WINSIZE_X = 630, WINSIZE_Y = 730;
     private final String WINTITLE = "Snake";
-    public GamePanel gp;
+    public FishingGame gp;
     public Button startButton;
     public Button toggleButton;
     public BorderPane rootPane;
@@ -21,8 +21,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         rootPane = new BorderPane();
-        gp = new GamePanel();
-        gp.setOnKeyPressed(gp.getKeyLogger());
+        gp = new FishingGame();
+        // gp.setOnKeyPressed(gp.getKeyLogger());
         startButton = new Button("START");
         startButton.setFocusTraversable(false);
         startButton.setOnAction(new StartButtonHandler());
