@@ -61,8 +61,11 @@ function draw() {
 //Makes the Image flicker
 function imageFlash(i) {
   if (i == 1) {
-    textSize(40, 40);
-    text("JUMP!", 500, 200);
+    strokeWeight(4);
+    stroke(100, 378, 782);
+    textSize(35, 35);
+    text("JUMP!", 550, 200);
+    noStroke();
     image(jumpImg, 360, 200, 150, 150);
     counter++;
     if (counter > 250) {
@@ -71,8 +74,12 @@ function imageFlash(i) {
     counter = 0;
   }
   if (i == 2) {
-    textSize(40, 40);
-    text("Touch Your Head!", 500, 200);
+    strokeWeight(4);
+    stroke(100, 378, 782);
+    textSize(35, 35);
+    textWrap(WORD);
+    text("Touch Your Head!", 550, 200, 100);
+    noStroke();
     image(headImg, 160, 200, 150, 150);
     counter++;
     if (counter > 250) {
@@ -81,8 +88,12 @@ function imageFlash(i) {
     counter = 0;
   }
   if (i == 3) {
-    textSize(40, 40);
-    text("Touch Your Shoulders!", 500, 200);
+    strokeWeight(4);
+    stroke(100, 378, 782);
+    textSize(35, 35);
+    textWrap(WORD);
+    text("Touch Your Shoulders!", 550, 200, 100);
+    noStroke();
     image(shoulderImg, 160, 25, 150, 150);
     counter++;
     if (counter > 250) {
@@ -91,9 +102,13 @@ function imageFlash(i) {
     counter = 0;
   }
   if (i == 4) {
-    textSize(40, 40);
-    text("LEG!", 500, 200);
-   image(legImg, 360, 25, 150, 150);
+    strokeWeight(4);
+    stroke(100, 378, 782);
+    textSize(35, 35);
+    textWrap(WORD);
+    text("Rais Your Leg!", 550, 200,100);
+    noStroke();
+    image(legImg, 360, 25, 150, 150);
     counter++;
     if (counter > 250) {
       rect(360, 200, 150, 150);
