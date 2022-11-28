@@ -1,1 +1,3 @@
 # FSE-100
+Our goal was to help the development of toddlers with web games you could play on any device. Our website has three different games, each helping with development in its own way. Our target audience are toddlers and parents who are looking for effective ways to help their child’s development.
+In order to run this project, you need to install the Live Server extension on VSCode and open the GitHub project in VSCode. Once you have done that, click the "Go Live" button in the bottom right corner of the VSCode screen and then paste the following link into your browser: http://127.0.0.1:5500/Files/MainMenu/.
